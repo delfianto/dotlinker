@@ -1,0 +1,40 @@
+[package]
+name = "dot_rs"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# YAML parsing
+serde = { version = "1.0", features = ["derive"] }
+saphyr = "0.0.6"
+
+# CLI argument parsing
+clap = { version = "4.5.51", features = ["derive"] }
+
+# Error handling
+anyhow = "1.0.100"
+
+# Logging
+log = "0.4.28"
+env_logger = "0.11.8"
+
+# Path utilities
+pathdiff = "0.2.3"
+dirs = "6.0.0"
+
+# Date/time for backups
+chrono = "0.4.42"
+
+# Regular expressions
+regex = "1.12.2"
+
+[dev-dependencies]
+ctor = "0.6.1"
+tempfile = "3.23.0"
+test-log = "0.2.18"
+env_logger = "0.11.8"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
