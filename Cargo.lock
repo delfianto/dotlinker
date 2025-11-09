@@ -219,7 +219,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dot_rs"
+name = "dot-rs"
 version = "0.1.0"
 dependencies = [
  "anyhow",
