@@ -1,5 +1,11 @@
 mod_info:
-  config_home:
+  '~':
+    - :.Xresources
+    - :.gemrc
+    - :.gitconfig
+    - .docker/cli-plugins:docker/cli-plugins
+    - .docker/config.json:docker/config.json
+  '~/.config':
     - :gaming/gamemode.ini
     - :gaming/MangoHud
     - :hyprland/dunst
@@ -16,9 +22,3 @@ mod_info:
     - :hyprland/wlogout
     - :hyprland/xdg-desktop-portal
     - :hyprland/xsettingsd
-  home:
-    - :.Xresources
-    - :.gemrc
-    - :.gitconfig
-    - .docker/cli-plugins:docker/cli-plugins
-    - .docker/config.json:docker/config.json

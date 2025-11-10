@@ -10,7 +10,7 @@ use clap::Parser;
 use linker::DotLinker;
 use std::path::PathBuf;
 
-/// A dotfile symlink manager that actually works
+/// Simple dotfile symlink manager
 #[derive(Parser, Debug)]
 #[command(name = "dot.rs")]
 #[command(about = "Simple dotfile package linker in Rust", long_about = None)]
@@ -28,9 +28,9 @@ struct Cli {
     #[arg(short, long, default_value_t = false)]
     verbose: bool,
 
-    /// Use absolute symlinks instead of relative
+    /// Use relative symlinks instead of absolute
     #[arg(long, default_value_t = false)]
-    absolute: bool,
+    relative: bool,
 
     /// Force overwrite existing files/symlinks
     #[arg(long, default_value_t = false)]
@@ -68,12 +68,14 @@ fn main() -> Result<()> {
         dotfiles_dir,
         cli.dry_run,
         cli.verbose,
-        cli.absolute,
+        cli.relative,
         cli.force,
     )?;
 
     // Process each module
     for module_name in &cli.modules {
+        log::info!("Processing module {}", module_name);
+
         if let Err(e) = linker.process_module(module_name) {
             log::error!("Failed to process module '{}': {:?}", module_name, e);
         }

@@ -26,7 +26,7 @@ pub fn format_log(
     let time = chrono::Local::now().format("%H:%M:%S");
 
     // Write formatted log with consistent padding
-    // Module name padded to 10 characters, right-aligned
+    // Module name padded to 8 characters, right-aligned
     writeln!(
         buf,
         "{} {} [{:>8}] {}",

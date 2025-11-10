@@ -1,6 +1,3 @@
-// src/test_utils.rs
-//! Shared test utilities for all test modules
-
 use anyhow::Result;
 use std::fs;
 use std::io::Write;
@@ -10,7 +7,7 @@ use tempfile::{NamedTempFile, TempDir};
 
 static INIT: Once = Once::new();
 
-/// Initialize the test logger. Safe to call multiple times - will only initialize once.
+/// Initialize the test logger. Should be safe to call multiple times - will only initialize once.
 pub fn init_test_logger() {
     INIT.call_once(|| {
         let _ = env_logger::builder()
@@ -91,7 +88,7 @@ impl YamlBuilder {
 
     /// Build the YAML string
     pub fn build(&self) -> String {
-        let mut yaml = String::from("mod_info:\n");
+        let mut yaml = String::from("dot_rs:\n");
 
         if !self.config_home.is_empty() {
             yaml.push_str("  config_home:\n");
@@ -348,6 +345,7 @@ impl ModuleFixture {
 }
 
 // ---------------------------
+// Inceptions...
 // Tests for test_utils itself
 // ---------------------------
 

@@ -36,7 +36,7 @@ fn parse_simple_entry(
     module_dir: &Path,
     base_dir: &Path,
 ) -> Result<LinkEntry> {
-    // Handle $ substitution
+    // Replace $ symbol with module name
     let entry = if entry == "$" { module_name } else { entry };
 
     // Strip leading asterisk if present

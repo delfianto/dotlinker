@@ -110,8 +110,6 @@ impl ModInfo {
         }
 
         let mut result = Vec::new();
-
-        // Iterate over the sequence
         for item in node.as_vec().unwrap_or(&vec![]) {
             if let Some(s) = Self::yaml_to_string(item) {
                 result.push(s);
@@ -127,19 +125,15 @@ impl ModInfo {
 
     /// Convert a YAML node to a string
     fn yaml_to_string(yaml: &Yaml) -> Option<String> {
-        // For strings, use as_str()
         if let Some(s) = yaml.as_str() {
             return Some(s.to_string());
         }
 
-        // For integers, use as_integer()
         if let Some(i) = yaml.as_integer() {
             return Some(i.to_string());
         }
 
-        // For booleans, check with is_boolean() then convert
         if yaml.is_boolean() {
-            // Booleans don't have as_boolean(), but we can compare with known values
             if yaml.as_str() == Some("true") {
                 return Some("true".to_string());
             } else if yaml.as_str() == Some("false") {
@@ -147,8 +141,6 @@ impl ModInfo {
             }
         }
 
-        // For real numbers, they're stored as strings internally
-        // Try to parse as f64 to detect real numbers
         if let Some(s) = yaml.as_str() {
             if s.parse::<f64>().is_ok() {
                 return Some(s.to_string());
@@ -166,22 +158,20 @@ pub fn parse_mod_file(path: &Path) -> Result<ModInfo> {
 
     log::debug!("Parsing YAML file: {:?}", path);
 
-    // Parse YAML - returns a Vec of documents
+    // Parse the YAML and get the first defined document
     let docs = Yaml::load_from_str(&contents).context("Failed to parse YAML")?;
-
-    // Get the first document
     let doc = docs.get(0).context("YAML file is empty")?;
 
-    // Check that root is a mapping
+    // Basic sanity check
     if !doc.is_mapping() {
         anyhow::bail!("Root YAML node must be a mapping/hash");
     }
 
-    // Extract the mod_info section safely
+    // Extract the root section
     let mod_info_node = match doc {
         Yaml::Mapping(map) => {
-            let key = Yaml::value_from_str("mod_info");
-            map.get(&key).context("Missing 'mod_info' key in YAML")?
+            let key = Yaml::value_from_str("dot_rs");
+            map.get(&key).context("Missing 'dot_rs' key in YAML")?
         }
         _ => anyhow::bail!("Root node is not a mapping"),
     };
@@ -200,11 +190,11 @@ mod tests {
 
     #[test]
     fn test_parse_mod_file() {
-        // Use simple_yaml() template
         let temp_file = YamlBuilder::yaml_string_to_temp_file(&simple_yaml()).unwrap();
 
         let mod_info = parse_mod_file(temp_file.path()).unwrap();
         assert!(mod_info.config_home.is_some());
+
         let config_home = mod_info.config_home.unwrap();
         assert_eq!(config_home.len(), 2);
         assert_eq!(config_home[0], "dunst");
@@ -213,11 +203,11 @@ mod tests {
 
     #[test]
     fn test_parse_home_entry() {
-        // Use home_only_yaml() template
         let temp_file = YamlBuilder::yaml_string_to_temp_file(&home_only_yaml()).unwrap();
 
         let mod_info = parse_mod_file(temp_file.path()).unwrap();
         assert!(mod_info.home.is_some());
+
         let home = mod_info.home.unwrap();
         assert_eq!(home.len(), 1);
         assert_eq!(home[0], ".Xresources");
@@ -225,7 +215,6 @@ mod tests {
 
     #[test]
     fn test_empty_sections() {
-        // Use config_home_only_yaml() template
         let temp_file = YamlBuilder::yaml_string_to_temp_file(&config_home_only_yaml()).unwrap();
 
         let mod_info = parse_mod_file(temp_file.path()).unwrap();
@@ -236,13 +225,12 @@ mod tests {
 
     #[test]
     fn test_parse_complex_yaml() {
-        // Use complex_yaml() template - one line instead of 25!
         let temp_file = YamlBuilder::yaml_string_to_temp_file(&complex_yaml()).unwrap();
 
         let mod_info = parse_mod_file(temp_file.path()).unwrap();
-
-        // Test config_home section
         assert!(mod_info.config_home.is_some());
+        assert!(mod_info.home.is_some());
+
         let config_home = mod_info.config_home.unwrap();
         assert_eq!(config_home.len(), 16);
         assert_eq!(config_home[0], ":gaming/gamemode.ini");
@@ -250,8 +238,6 @@ mod tests {
         assert_eq!(config_home[2], ":hyprland/dunst");
         assert_eq!(config_home[15], ":hyprland/xsettingsd");
 
-        // Test home section
-        assert!(mod_info.home.is_some());
         let home = mod_info.home.unwrap();
         assert_eq!(home.len(), 5);
         assert_eq!(home[0], ":.Xresources");
@@ -260,7 +246,6 @@ mod tests {
         assert_eq!(home[3], ".docker/cli-plugins:docker/cli-plugins");
         assert_eq!(home[4], ".docker/config.json:docker/config.json");
 
-        // Test that other sections are None
         assert!(mod_info.cache_home.is_none());
         assert!(mod_info.data_home.is_none());
         assert!(mod_info.local_bin.is_none());
@@ -269,15 +254,13 @@ mod tests {
 
     #[test]
     fn test_parse_colon_prefix_entries() {
-        // Use colon_prefix_yaml() template
         let temp_file = YamlBuilder::yaml_string_to_temp_file(&colon_prefix_yaml()).unwrap();
 
         let mod_info = parse_mod_file(temp_file.path()).unwrap();
         assert!(mod_info.config_home.is_some());
+
         let config_home = mod_info.config_home.unwrap();
         assert_eq!(config_home.len(), 3);
-
-        // The parser should keep the colon prefix as-is
         assert_eq!(config_home[0], ":dunst");
         assert_eq!(config_home[1], ":hypr");
         assert_eq!(config_home[2], "normal_entry");
@@ -285,15 +268,13 @@ mod tests {
 
     #[test]
     fn test_parse_mapped_entries() {
-        // Use mapped_entries_yaml() template
         let temp_file = YamlBuilder::yaml_string_to_temp_file(&mapped_entries_yaml()).unwrap();
 
         let mod_info = parse_mod_file(temp_file.path()).unwrap();
         assert!(mod_info.home.is_some());
+
         let home = mod_info.home.unwrap();
         assert_eq!(home.len(), 3);
-
-        // The parser should keep the mapping syntax as-is
         assert_eq!(home[0], ".docker/cli-plugins:docker/cli-plugins");
         assert_eq!(home[1], ".docker/config.json:docker/config.json");
         assert_eq!(home[2], "normal_entry");
@@ -301,8 +282,6 @@ mod tests {
 
     #[test]
     fn test_parse_all_sections() {
-        // This test is unique - it tests ALL six sections at once
-        // Keep using YamlBuilder directly
         let temp_file = YamlBuilder::new()
             .with_config_home(vec!["config_item"])
             .with_home(vec!["home_item"])
@@ -314,7 +293,6 @@ mod tests {
             .unwrap();
 
         let mod_info = parse_mod_file(temp_file.path()).unwrap();
-
         assert_eq!(mod_info.config_home.unwrap()[0], "config_item");
         assert_eq!(mod_info.home.unwrap()[0], "home_item");
         assert_eq!(mod_info.cache_home.unwrap()[0], "cache_item");

@@ -1,4 +1,3 @@
-// src/linker/core.rs
 use crate::linker::entry::parse_entry;
 use crate::linker::path::BaseDirs;
 use crate::linker::symlink::create_symlink;
@@ -11,7 +10,7 @@ pub struct DotLinker {
     pub base_dirs: BaseDirs,
     pub dry_run: bool,
     pub verbose: bool,
-    pub use_relative: bool,
+    pub relative: bool,
     pub force: bool,
 }
 
@@ -21,24 +20,18 @@ impl DotLinker {
         dotfiles_dir: PathBuf,
         dry_run: bool,
         verbose: bool,
-        absolute: bool,
+        relative: bool,
         force: bool,
     ) -> Result<Self> {
         let base_dirs = BaseDirs::new().context("Failed to initialize base directories")?;
 
-        log::info!("Dotfiles directory: {:?}", dotfiles_dir);
-        log::debug!("Initializing DotLinker with:");
-        log::debug!("  - dry_run: {}", dry_run);
-        log::debug!("  - verbose: {}", verbose);
-        log::debug!("  - absolute: {}", absolute);
-        log::debug!("  - force: {}", force);
-
         if verbose {
-            log::debug!("Verbose mode enabled");
-            log::debug!(
-                "Using {} symlinks",
-                if !absolute { "relative" } else { "absolute" }
-            );
+            log::info!("Dotfiles directory: {:?}", dotfiles_dir);
+            log::debug!("Initializing DotLinker with:");
+            log::debug!("  - abs_dir : {}", !relative);
+            log::debug!("  - dry_run : {}", dry_run);
+            log::debug!("  - force   : {}", force);
+            log::debug!("  - verbose : {}", verbose);
         }
 
         Ok(Self {
@@ -46,7 +39,7 @@ impl DotLinker {
             base_dirs,
             dry_run,
             verbose,
-            use_relative: !absolute,
+            relative,
             force,
         })
     }
@@ -66,7 +59,7 @@ impl DotLinker {
             anyhow::bail!("Module directory does not exist: {:?}", module_dir);
         }
 
-        let mod_file = module_dir.join("mod.yml");
+        let mod_file = module_dir.join("mod.yaml");
         log::debug!(
             "[MOD:{}] Looking for config file: {:?}",
             module_name.to_uppercase(),
@@ -198,7 +191,7 @@ impl DotLinker {
         create_symlink(
             &entry.source,
             &entry.destination,
-            self.use_relative,
+            self.relative,
             self.dry_run,
             self.force,
             module_name,
@@ -215,7 +208,7 @@ mod tests {
     use test_log::test;
 
     #[test]
-    fn test_dotlinker_new() {
+    fn test_dotlinker_new_with_absolute_links() {
         let fixture = ModuleFixture::simple("test_module").unwrap();
         let dotfiles_dir = fixture.dotfiles_dir();
 
@@ -223,7 +216,7 @@ mod tests {
             dotfiles_dir.clone(),
             true,  // dry_run
             true,  // verbose
-            false, // absolute
+            false, // relative
             false, // force
         )
         .unwrap();
@@ -231,24 +224,24 @@ mod tests {
         assert_eq!(linker.dotfiles_dir, dotfiles_dir);
         assert!(linker.dry_run);
         assert!(linker.verbose);
-        assert!(linker.use_relative);
+        assert!(linker.relative);
         assert!(!linker.force);
     }
 
     #[test]
-    fn test_dotlinker_new_with_absolute_links() {
+    fn test_dotlinker_new_with_relative_links() {
         let fixture = ModuleFixture::simple("test_module").unwrap();
 
         let linker = DotLinker::new(
             fixture.dotfiles_dir(),
             false, // dry_run
             false, // verbose
-            true,  // absolute
+            true,  // relative
             true,  // force
         )
         .unwrap();
 
-        assert!(!linker.use_relative);
+        assert!(!linker.relative);
         assert!(linker.force);
     }
 
@@ -280,7 +273,6 @@ mod tests {
 
     #[test]
     fn test_process_module_success() {
-        // Use ModuleFixture::simple() which handles everything
         let fixture = ModuleFixture::simple("test_module")
             .unwrap()
             .with_source_files(vec!["dunst", "hypr", ".Xresources"])
@@ -288,10 +280,10 @@ mod tests {
 
         let linker = DotLinker::new(
             fixture.dotfiles_dir(),
-            true, // dry_run
-            true,
-            false,
-            false,
+            true,  // dry_run
+            true,  // verbose
+            false, // relative
+            false, // force
         )
         .unwrap();
 
@@ -305,15 +297,14 @@ mod tests {
 
     #[test]
     fn test_process_complex_module() {
-        // Use ModuleFixture::complex() - it already knows everything!
         let fixture = ModuleFixture::complex("hyprland").unwrap();
 
         let linker = DotLinker::new(
             fixture.dotfiles_dir(),
-            true, // dry_run
-            true,
-            false,
-            false,
+            true,  // dry_run
+            true,  // verbose
+            false, // relative
+            false, // force
         )
         .unwrap();
 
@@ -338,7 +329,6 @@ mod tests {
 
     #[test]
     fn test_process_config_entries_with_entries() {
-        // simple_yaml has config_home entries: ["dunst", "hypr"]
         let fixture = ModuleFixture::simple("test_module")
             .unwrap()
             .with_source_files(vec!["dunst", "hypr"])
@@ -413,20 +403,20 @@ mod tests {
 
         let linker_verbose = DotLinker::new(
             fixture.dotfiles_dir(),
-            true,
-            true, // verbose
-            false,
-            false,
+            true,  // dry_run
+            true,  // verbose
+            false, // relative
+            false, // force
         )
         .unwrap();
         assert!(linker_verbose.verbose);
 
         let linker_quiet = DotLinker::new(
             fixture.dotfiles_dir(),
-            true,
-            false, // not verbose
-            false,
-            false,
+            true,  // dry_run
+            false, // verbose
+            false, // relative
+            false, // force
         )
         .unwrap();
         assert!(!linker_quiet.verbose);
@@ -438,20 +428,20 @@ mod tests {
 
         let linker_dry = DotLinker::new(
             fixture.dotfiles_dir(),
-            true, // dry_run
-            false,
-            false,
-            false,
+            true,  // dry_run
+            false, // verbose
+            false, // relative
+            false, // force
         )
         .unwrap();
         assert!(linker_dry.dry_run);
 
         let linker_real = DotLinker::new(
             fixture.dotfiles_dir(),
-            false, // not dry_run
-            false,
-            false,
-            false,
+            false, // dry_run
+            false, // verbose
+            false, // relative
+            false, // force
         )
         .unwrap();
         assert!(!linker_real.dry_run);

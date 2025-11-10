@@ -22,12 +22,29 @@ pub fn create_symlink(
         );
     }
 
+    if dry_run {
+        log::info!(
+            "Dry-run enabled, would link: {} -> {}",
+            destination.display(),
+            source.display()
+        );
+
+        // Skip actual symlink creation
+        return Ok(());
+    }
+
     // Compute the link target (relative or absolute)
     let link_target = if use_relative {
         compute_relative_path(source, destination)?
     } else {
         source.to_path_buf()
     };
+
+    log::debug!(
+        "Link target for {}: {}",
+        destination.display(),
+        link_target.display()
+    );
 
     // Check destination status and handle conflicts
     let dest_status = check_destination(destination)?;
