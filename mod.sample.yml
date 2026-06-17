@@ -1,0 +1,24 @@
+mod_info:
+  '~':
+    - :.Xresources
+    - :.gemrc
+    - :.gitconfig
+    - .docker/cli-plugins:docker/cli-plugins
+    - .docker/config.json:docker/config.json
+  '~/.config':
+    - :gaming/gamemode.ini
+    - :gaming/MangoHud
+    - :hyprland/dunst
+    - :hyprland/gtk-3.0
+    - :hyprland/gtk-4.0
+    - :hyprland/hypr
+    - :hyprland/matugen
+    - :hyprland/qt6ct
+    - :hyprland/rofi
+    - :hyprland/swaync
+    - :hyprland/wal
+    - :hyprland/waybar
+    - :hyprland/waypaper
+    - :hyprland/wlogout
+    - :hyprland/xdg-desktop-portal
+    - :hyprland/xsettingsd
