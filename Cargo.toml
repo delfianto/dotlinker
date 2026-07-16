@@ -29,7 +29,7 @@ chrono = "0.4.42"
 regex = "1.12.2"
 
 [dev-dependencies]
-ctor = "0.6.1"
+ctor = "1.0.0"
 tempfile = "3.23.0"
 test-log = "0.2.18"
 env_logger = "0.11.8"
