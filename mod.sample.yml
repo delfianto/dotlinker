@@ -1,24 +1,34 @@
-mod_info:
-  '~':
+# Sample mod.yaml for a module directory under your dotfiles root.
+# Copy into <module>/mod.yaml and edit. Keys under dot_rs are optional;
+# omit any base you don't use.
+#
+# Base dirs (hardcoded under $HOME):
+#   home         → $HOME
+#   config_home  → $HOME/.config
+#   cache_home   → $HOME/.cache
+#   data_home    → $HOME/.local/share
+#   local_bin    → $HOME/.local/bin
+#   local_dir    → $HOME/.local
+#
+# Entry forms:
+#   name              → module/name  →  <base>/name
+#   :name             → same (leading colon is decorative)
+#   $                 → module name as both source and dest basename
+#   src:dest          → module/src   →  <base>/dest
+#   *name             → asterisk stripped (legacy)
+
+dot_rs:
+  config_home:
+    - hypr
+    - dunst
+    - :waybar
+  home:
     - :.Xresources
-    - :.gemrc
     - :.gitconfig
     - .docker/cli-plugins:docker/cli-plugins
     - .docker/config.json:docker/config.json
-  '~/.config':
-    - :gaming/gamemode.ini
-    - :gaming/MangoHud
-    - :hyprland/dunst
-    - :hyprland/gtk-3.0
-    - :hyprland/gtk-4.0
-    - :hyprland/hypr
-    - :hyprland/matugen
-    - :hyprland/qt6ct
-    - :hyprland/rofi
-    - :hyprland/swaync
-    - :hyprland/wal
-    - :hyprland/waybar
-    - :hyprland/waypaper
-    - :hyprland/wlogout
-    - :hyprland/xdg-desktop-portal
-    - :hyprland/xsettingsd
+  cache_home: []
+  data_home: []
+  local_bin:
+    - scripts/my-tool:my-tool
+  local_dir: []
