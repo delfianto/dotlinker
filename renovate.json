@@ -29,6 +29,15 @@
         "major"
       ],
       "enabled": false
+    },
+    {
+      "description": "0.x crates Cargo treats as breaking; solo review PRs, no automerge",
+      "matchPackageNames": [
+        "ctor",
+        "saphyr"
+      ],
+      "automerge": false,
+      "groupName": null
     }
   ]
 }
