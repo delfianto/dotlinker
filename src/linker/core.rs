@@ -224,7 +224,7 @@ mod tests {
         assert_eq!(linker.dotfiles_dir, dotfiles_dir);
         assert!(linker.dry_run);
         assert!(linker.verbose);
-        assert!(linker.relative);
+        assert!(!linker.relative);
         assert!(!linker.force);
     }
 
@@ -241,7 +241,7 @@ mod tests {
         )
         .unwrap();
 
-        assert!(!linker.relative);
+        assert!(linker.relative);
         assert!(linker.force);
     }
 
@@ -376,7 +376,7 @@ mod tests {
 
             // Write simple_yaml to each module
             use crate::test_utils::{YamlBuilder, simple_yaml};
-            YamlBuilder::write_yaml_string_to_file(&simple_yaml(), &module_dir.join("mod.yml"))
+            YamlBuilder::write_yaml_string_to_file(&simple_yaml(), &module_dir.join("mod.yaml"))
                 .unwrap();
 
             // Create source files

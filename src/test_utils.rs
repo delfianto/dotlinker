@@ -252,8 +252,8 @@ impl ModuleFixture {
         let module_dir = temp_dir.path().join(module_name);
         fs::create_dir_all(&module_dir)?;
 
-        // Write mod.yml
-        let mod_yml = module_dir.join("mod.yml");
+        // Write mod.yaml
+        let mod_yml = module_dir.join("mod.yaml");
         let mut file = fs::File::create(&mod_yml)?;
         file.write_all(yaml_content.as_bytes())?;
 
@@ -338,9 +338,9 @@ impl ModuleFixture {
         self.temp_dir.path().join(&self.module_name)
     }
 
-    /// Get the path to mod.yml
+    /// Get the path to mod.yaml
     pub fn mod_yml_path(&self) -> PathBuf {
-        self.module_dir().join("mod.yml")
+        self.module_dir().join("mod.yaml")
     }
 }
 
@@ -366,7 +366,7 @@ mod tests {
             .with_config_home(vec!["dunst", "hypr"])
             .build();
 
-        assert!(yaml.contains("mod_info:"));
+        assert!(yaml.contains("dot_rs:"));
         assert!(yaml.contains("config_home:"));
         assert!(yaml.contains("- dunst"));
         assert!(yaml.contains("- hypr"));
