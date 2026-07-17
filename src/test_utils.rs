@@ -18,7 +18,9 @@ pub fn init_test_logger() {
     });
 }
 
-#[ctor::ctor]
+// Pre-main ctor: only Once + env_logger::try_init — safe test-logger setup.
+// ctor 0.13+ requires explicit `unsafe` for pre-main context.
+#[ctor::ctor(unsafe)]
 fn init() {
     init_test_logger();
 }
