@@ -141,10 +141,10 @@ impl ModInfo {
             }
         }
 
-        if let Some(s) = yaml.as_str() {
-            if s.parse::<f64>().is_ok() {
-                return Some(s.to_string());
-            }
+        if let Some(s) = yaml.as_str()
+            && s.parse::<f64>().is_ok()
+        {
+            return Some(s.to_string());
         }
 
         None
@@ -160,7 +160,7 @@ pub fn parse_mod_file(path: &Path) -> Result<ModInfo> {
 
     // Parse the YAML and get the first defined document
     let docs = Yaml::load_from_str(&contents).context("Failed to parse YAML")?;
-    let doc = docs.get(0).context("YAML file is empty")?;
+    let doc = docs.first().context("YAML file is empty")?;
 
     // Basic sanity check
     if !doc.is_mapping() {
