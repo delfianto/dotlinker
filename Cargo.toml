@@ -1,9 +1,13 @@
 [package]
 name = "dot-rs"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 rust-version = "1.100.0"
 license = "MIT"
+
+[[bin]]
+name = "dotlinker"
+path = "src/main.rs"
 
 [dependencies]
 anyhow = "1.0.105"

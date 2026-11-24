@@ -12,7 +12,7 @@ use std::path::PathBuf;
 
 /// Simple dotfile symlink manager
 #[derive(Parser, Debug)]
-#[command(name = "dot.rs")]
+#[command(name = "dotlinker")]
 #[command(about = "Simple dotfile package linker in Rust", long_about = None)]
 #[command(version)]
 struct Cli {

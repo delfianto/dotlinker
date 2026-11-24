@@ -1,4 +1,4 @@
-# dotlinker — baseline (bin: dot-rs)
+# dotlinker — baseline (bin: dotlinker)
 #
 # RULES → BASELINE → LAYERS → EXCEPTIONS  (never reverse that order)
 # Full policy: JUST.md in this meta-repo.
@@ -32,10 +32,10 @@
 # Space-separated cargo binary names (must match [[bin]].name / package default).
 # Single-bin:  bins := "zentools"
 # Multi-bin:   bins := "nvprime nvprime-sys"
-bins := "dot-rs"
+bins := "dotlinker"
 
 # Binary `run` invokes (must be one of `bins`). Single-bin: same as bins.
-primary := "dot-rs"
+primary := "dotlinker"
 
 bin_dir := env_var("HOME") / ".local/bin"
 sys_dir := "/usr/local/bin"
