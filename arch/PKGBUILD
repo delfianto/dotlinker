@@ -1,0 +1,20 @@
+pkgname=dotlinker-bin
+pkgver=0.2.0
+pkgrel=1
+pkgdesc='Symlink manager for modular dotfiles'
+arch=('x86_64')
+url='https://github.com/delfianto/dotlinker'
+license=('MIT')
+depends=('glibc' 'libgcc')
+provides=("dotlinker=$pkgver")
+conflicts=('dotlinker')
+options=('!strip' '!debug')
+_archive="dotlinker-v$pkgver-linux-x86_64"
+source=("$url/releases/download/v$pkgver/$_archive.tar.gz")
+sha256sums=('8f069f3c87719e43855368f307e6f36253e34319f792b66c784cd9ac17b97154')
+
+package() {
+    cd "$srcdir/$_archive"
+    install -Dm0755 dot-rs "$pkgdir/usr/local/bin/dot-rs"
+    install -Dm0644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

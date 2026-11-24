@@ -1,0 +1,17 @@
+pkgbase = dotlinker-bin
+	pkgdesc = Symlink manager for modular dotfiles
+	pkgver = 0.2.0
+	pkgrel = 1
+	url = https://github.com/delfianto/dotlinker
+	arch = x86_64
+	license = MIT
+	depends = glibc
+	depends = libgcc
+	provides = dotlinker=0.2.0
+	conflicts = dotlinker
+	options = !strip
+	options = !debug
+	source = https://github.com/delfianto/dotlinker/releases/download/v0.2.0/dotlinker-v0.2.0-linux-x86_64.tar.gz
+	sha256sums = 8f069f3c87719e43855368f307e6f36253e34319f792b66c784cd9ac17b97154
+
+pkgname = dotlinker-bin
