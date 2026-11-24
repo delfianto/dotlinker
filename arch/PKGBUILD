@@ -1,16 +1,17 @@
-pkgname=dotlinker-bin
+pkgname=dotlinker
 pkgver=0.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Symlink manager for modular dotfiles'
 arch=('x86_64')
 url='https://github.com/delfianto/dotlinker'
 license=('MIT')
 depends=('glibc' 'libgcc')
-provides=("dotlinker=$pkgver")
-conflicts=('dotlinker')
+provides=("dotlinker-bin=$pkgver-$pkgrel")
+conflicts=('dotlinker-bin')
+replaces=('dotlinker-bin')
 options=('!strip' '!debug')
 _archive="dotlinker-v$pkgver-linux-x86_64"
-source=("$url/releases/download/v$pkgver/$_archive.tar.gz")
+source=("$url/releases/download/arch-v$pkgver-$pkgrel/$_archive.tar.gz")
 sha256sums=('48ac859fa775f459a8ac231a0a8fd31a522db92d8bde5ba0523366146579e8f4')
 
 package() {
