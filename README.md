@@ -47,14 +47,14 @@ Run it. Watch logs pretend everything is fine. Move on with your life.
 
 ### Arch Linux (x86_64)
 
-The package installs `/usr/local/bin/dotlinker`.
+The package installs `/usr/bin/dotlinker`.
 
 Download the `.pkg.tar.zst` from [GitHub Releases](https://github.com/delfianto/dotlinker/releases/latest)
 and install it with `sudo pacman -U ./<package-file>`, or build the package
 from the checksum-verified release archive with `makepkg -si`:
 
 ```sh
-git clone --branch v0.3.0 https://github.com/delfianto/dotlinker.git
+git clone --branch v0.3.1 https://github.com/delfianto/dotlinker.git
 cd dotlinker/arch
 makepkg -si
 ```

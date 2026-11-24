@@ -1,5 +1,5 @@
 pkgname=dotlinker-bin
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 pkgdesc='Symlink manager for modular dotfiles'
 arch=('x86_64')
@@ -11,10 +11,10 @@ conflicts=('dotlinker')
 options=('!strip' '!debug')
 _archive="dotlinker-v$pkgver-linux-x86_64"
 source=("$url/releases/download/v$pkgver/$_archive.tar.gz")
-sha256sums=('9b1634971c0c8b6c376135e51bbd83a524b7c9f2f9ecc675362905d2d2f6fd90')
+sha256sums=('48ac859fa775f459a8ac231a0a8fd31a522db92d8bde5ba0523366146579e8f4')
 
 package() {
     cd "$srcdir/$_archive"
-    install -Dm0755 dotlinker "$pkgdir/usr/local/bin/dotlinker"
+    install -Dm0755 dotlinker "$pkgdir/usr/bin/dotlinker"
     install -Dm0644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
