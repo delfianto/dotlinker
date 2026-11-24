@@ -2,7 +2,7 @@
 
 > *Because copying config files by hand is a lifestyle choice, not a workflow.*
 
-**dotlinker** (`dot-rs` at the cargo altar) is a small Rust tool that turns a pile of
+**dotlinker** is a small Rust tool that turns a pile of
 module directories and a YAML file into a forest of symlinks. It is not a package
 manager, not a framework, and not a “dotfiles platform.” It is a polite script that
 learned to compile.
@@ -47,14 +47,14 @@ Run it. Watch logs pretend everything is fine. Move on with your life.
 
 ### Arch Linux (x86_64)
 
-The package installs `dot-rs`. Executables are installed under `/usr/local/bin`.
+The package installs `/usr/local/bin/dotlinker`.
 
 Download the `.pkg.tar.zst` from [GitHub Releases](https://github.com/delfianto/dotlinker/releases/latest)
 and install it with `sudo pacman -U ./<package-file>`, or build the package
 from the checksum-verified release archive with `makepkg -si`:
 
 ```sh
-git clone --branch v0.2.0 https://github.com/delfianto/dotlinker.git
+git clone --branch v0.3.0 https://github.com/delfianto/dotlinker.git
 cd dotlinker/arch
 makepkg -si
 ```
@@ -72,8 +72,7 @@ cd dotlinker
 cargo install --path .
 ```
 
-Binary name: **`dot-rs`**. Repo name: **dotlinker**. Package name: **dot-rs**.
-Consistency is for people who write design docs.
+Starting with v0.3.0, run `dotlinker` in scripts that used `dot-rs`.
 
 ---
 
@@ -81,13 +80,13 @@ Consistency is for people who write design docs.
 
 ```bash
 # pretend first — always pretend first
-dot-rs --dry-run --verbose --dotfiles-dir ~/dotfiles hypr nvim
+dotlinker --dry-run --verbose --dotfiles-dir ~/dotfiles hypr nvim
 
 # when the dry run stops insulting you
-dot-rs --dotfiles-dir ~/dotfiles hypr nvim
+dotlinker --dotfiles-dir ~/dotfiles hypr nvim
 
 # when an old file is in the way and you want drama
-dot-rs --force --dotfiles-dir ~/dotfiles hypr
+dotlinker --force --dotfiles-dir ~/dotfiles hypr
 ```
 
 Default `--dotfiles-dir` is the **current working directory**, despite what the help
@@ -98,7 +97,7 @@ text mumbles about “parent of this script.” Believe the code, not the market
 ## CLI
 
 ```
-dot-rs [OPTIONS] [MODULES]...
+dotlinker [OPTIONS] [MODULES]...
 ```
 
 | Flag | What it claims to do | What it actually does |
